@@ -3,9 +3,57 @@ import "package:test_drive/location_detail.dart";
 import "package:test_drive/models/location.dart";
 import "styles.dart";
 
-class LocationList extends StatelessWidget {
-  final List<Location> locations;
-  LocationList(this.locations);
+// I mean have a look at gpt, its prety much same as react, but in a crude and
+// different format.
+class LocationList extends StatefulWidget {
+  // We'll need to override the special method called create state.
+  // This creates an instance of the state of the widget.
+  @override
+  createState() => _LocationListState();
+}
+
+// It has an underscore because this class won't be available anywhere outside
+// the file.
+// So basically for the stateful widget, when the state is loaded it calls
+// the createState() method to create the state of the widget, when the state
+// object is first instantiated using the constructor in the statefulWidget
+// class we initialize the attributes of this then the lifecycle method initState()
+// is called, after which the build method is called to create the widget tree(UI)
+// FOR THE STATEFULWIDGET, so everything done here is for the statefulWidget.
+class _LocationListState extends State<LocationList> {
+  List<Location> locations = [];
+  // We remove the constructor, we don't need it anymore.
+
+  // We'd like to invoke the loadData function when the widget instantiates,
+  // there is a special method for that.
+  /// It is a lifecycle method called when a state object is first created.
+  /// This is typically where you initialize data, set up listeners, or start
+  /// initial asynchronous operations.
+  /// It is used to perform any initialization logic for the state object.
+  /// This includes setting up any state variables or starting any necessary
+  /// services or network requests.
+  ///  It is only called once during the lifecycle of the state object
+  @override
+  void initState() {
+    /// We use the Superclass here called State from which we extends.
+    /// This call to the superclass's initState method is crucial because
+    /// it ensures that any initialization logic in the State class is also
+    /// executed. The State class might perform some essential setup that your
+    /// subclass relies on.
+
+    super.initState();
+    loadData();
+  }
+
+  // So in dart if you don't give the return type it returns dynamic.
+  // To load data
+  loadData() async {
+    final locations = await Location.fetchAll();
+    // Since we need to trigger a rebuild we'll have to use the setState() method.
+    setState(() {
+      this.locations = locations;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -30,7 +78,7 @@ class LocationList extends StatelessWidget {
 
   Widget _listViewItemBuilder(BuildContext context, int index) {
     {
-      var location = this.locations[index];
+      final location = this.locations[index];
       return ListTile(
         contentPadding: EdgeInsets.all(10.0),
         leading: _itemThumbnail(location),
@@ -38,17 +86,17 @@ class LocationList extends StatelessWidget {
         // there should be no parameters and void return type
         // Here technically the onTap function is a closure as we are
         // accessing the locations variable. Have a look!
-        onTap: () => _navigateToLocationDetail(context, location),
+        onTap: () => _navigateToLocationDetail(context, location.id),
       );
     }
   }
 
-  void _navigateToLocationDetail(BuildContext context, Location location) {
+  void _navigateToLocationDetail(BuildContext context, int locationID) {
     Navigator.push(
       context,
       MaterialPageRoute(
         // Here builder is used to build that route
-        builder: (context) => LocationDetail(location),
+        builder: (context) => LocationDetail(locationID),
       ),
     );
   }

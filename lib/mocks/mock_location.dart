@@ -15,6 +15,7 @@ class MockLocation extends Location {
 
   static final List<Location> items = [
     Location(
+      id: 1,
       name: 'Paris',
       url:
           'https://images.unsplash.com/photo-1499856871958-5b9627545d1a?q=80&w=2920&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
@@ -32,6 +33,7 @@ class MockLocation extends Location {
       ],
     ),
     Location(
+      id: 2,
       name: 'New York',
       url:
           'https://images.unsplash.com/photo-1485871981521-5b1fd3805eee?q=80&w=2940&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
@@ -49,6 +51,7 @@ class MockLocation extends Location {
       ],
     ),
     Location(
+      id: 3,
       name: 'Tokyo',
       url:
           'https://images.unsplash.com/photo-1513407030348-c983a97b98d8?q=80&w=2944&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
@@ -66,6 +69,7 @@ class MockLocation extends Location {
       ],
     ),
     Location(
+      id: 4,
       name: 'Sydney',
       url:
           'https://images.unsplash.com/photo-1598948485421-33a1655d3c18?q=80&w=2874&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
@@ -83,6 +87,7 @@ class MockLocation extends Location {
       ],
     ),
     Location(
+      id: 5,
       name: 'Rio de Janeiro',
       url:
           'https://images.unsplash.com/photo-1483729558449-99ef09a8c325?q=80&w=2940&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
@@ -100,6 +105,7 @@ class MockLocation extends Location {
       ],
     ),
     Location(
+      id: 6,
       name: 'London',
       url:
           'https://images.unsplash.com/photo-1513635269975-59663e0ac1ad?q=80&w=2940&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
@@ -117,6 +123,7 @@ class MockLocation extends Location {
       ],
     ),
     Location(
+      id: 7,
       name: 'Dubai',
       url:
           'https://images.unsplash.com/photo-1512453979798-5ea266f8880c?q=80&w=2400&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
@@ -134,6 +141,7 @@ class MockLocation extends Location {
       ],
     ),
     Location(
+      id: 8,
       name: 'Rome',
       url:
           'https://images.unsplash.com/photo-1531572753322-ad063cecc140?q=80&w=2952&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
@@ -151,6 +159,7 @@ class MockLocation extends Location {
       ],
     ),
     Location(
+      id: 9,
       name: 'San Francisco',
       url:
           'https://images.unsplash.com/photo-1450149632596-3ef25a62011a?q=80&w=2862&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
@@ -168,6 +177,7 @@ class MockLocation extends Location {
       ],
     ),
     Location(
+      id: 10,
       name: 'Cape Town',
       url:
           'https://images.unsplash.com/photo-1585061528750-3baca2cb6a10?q=80&w=2940&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
@@ -193,5 +203,9 @@ class MockLocation extends Location {
   // Static functions are not in camel case remember that.
   static Location fetchAny() {
     return MockLocation.items[0];
+  }
+
+  static Location fetch(int index) {
+    return MockLocation.items[index];
   }
 }
