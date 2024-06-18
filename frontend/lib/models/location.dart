@@ -21,22 +21,33 @@ part 'location.g.dart';
 
 @JsonSerializable()
 class Location {
+  final int id;
+  final String name;
+  final String url;
+  // final String userItinerarySummary;
+  // final String tourPackageName;
+  final List<LocationFact>? facts;
   // No-parameter constructor using named constructor syntax
   Location.defaultConstructor()
       : id = 10000,
         name = '',
         url = '',
+        // userItinerarySummary = '',
+        // tourPackageName = '',
         facts = [];
-  final int id;
-  final String name;
-  final String url;
-  final List<LocationFact>? facts;
   Location(
-      {required this.id, required this.name, required this.url, this.facts});
+      {required this.id,
+      required this.name,
+      required this.url,
+      // required this.userItinerarySummary,
+      // required this.tourPackageName,
+      this.facts});
   Location.blank()
       : id = 0,
         name = '',
         url = '',
+        // userItinerarySummary = '',
+        // tourPackageName = '',
         facts = [];
 
   /// A necessary factory constructor for creating a new User instance
@@ -66,7 +77,7 @@ class Location {
     // for (var jsonItem in json.decode(resp.body)) {
     //   list.add(Location.fromJson(jsonItem));
     // }
-    await Future.delayed(Duration(seconds: 1));
+    // await Future.delayed(Duration(seconds: 1));
     list = MockLocation.items;
     return list;
   }
@@ -80,7 +91,7 @@ class Location {
     // }
 
     // final Map<String, dynamic> itemMap = json.decode(resp.body);
-    await Future.delayed(Duration(seconds: 1));
+    // await Future.delayed(Duration(seconds: 1));
     Location itemMap = MockLocation.items[id];
     return itemMap;
   }

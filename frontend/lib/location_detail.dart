@@ -1,7 +1,14 @@
 import "package:flutter/material.dart";
-import "package:test_drive/mocks/mock_location.dart";
+import "package:test_drive/components/banner_image.dart";
+import "package:test_drive/components/default_app_bar.dart";
+import "package:test_drive/components/location_tile.dart";
 import "package:test_drive/models/location.dart";
 import "package:test_drive/styles.dart";
+import "package:url_launcher/url_launcher.dart";
+
+const BannerImageHeight = 300.0;
+const BodyVerticalPadding = 20.0;
+const FooterHeight = 100.0;
 
 class LocationDetail extends StatefulWidget {
   final int locationID;
@@ -56,22 +63,17 @@ class _LocationDetailState extends State<LocationDetail> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        // To display any text in futter we use the Text widget.
-        title: Text(location.name, style: Styles.headerLarge),
-        backgroundColor: Colors.grey[600],
-      ),
-      body: SingleChildScrollView(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: _renderBody(context, location),
-        ),
+      appBar: DefaultAppBar(),
+      body: Stack(
+        children: [
+          _renderBody(context, location),
+          _renderFooter(context, location),
+        ],
       ),
     );
   }
 
-//   // To define a private function in a flutter app jsut prepend the function
+//   // To define a private function in a flutter app jsu_renderBody(context, location) prepend the function
 //   // with an underscore like this: _section, so if the method is not going
 //   // to be used outside the class this is the best practice.
 //   Widget _section(String title, Color color) {
@@ -85,11 +87,50 @@ class _LocationDetailState extends State<LocationDetail> {
 //   }
 // }
   // This function is going to render the entire body of the page.
-  List<Widget> _renderBody(BuildContext context, Location location) {
+  Widget _renderBody(BuildContext context, Location location) {
     List<Widget> result = [];
-    result.add(_bannerImage(location.url, 170.0));
+    result.add(BannerImage(url: location.url, height: BannerImageHeight));
+    result.add(_renderHeader());
     result.addAll(_renderFacts(context, location));
-    return result;
+    result.add(_renderBottomSpacer());
+    return SingleChildScrollView(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: result,
+      ),
+    );
+  }
+
+  Widget _renderHeader() {
+    return Container(
+      padding: const EdgeInsets.symmetric(
+        vertical: BodyVerticalPadding,
+        horizontal: Styles.horizontalPaddingDefault,
+      ),
+      child: LocationTile(
+        location: this.location,
+        darkTheme: false,
+      ),
+    );
+  }
+
+  Widget _renderFooter(BuildContext context, Location location) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.end,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        Container(
+          alignment: const Alignment(0.0, 0.0),
+          decoration: BoxDecoration(color: Colors.white.withOpacity(0.5)),
+          height: FooterHeight,
+          child: Container(
+            padding: EdgeInsets.symmetric(vertical: 20.0, horizontal: 30.0),
+            child: _renderBookButton(),
+          ),
+        )
+      ],
+    );
   }
 
   List<Widget> _renderFacts(BuildContext context, Location location) {
@@ -125,27 +166,54 @@ class _LocationDetailState extends State<LocationDetail> {
     );
   }
 
-  Widget _bannerImage(String url, double height) {
-    Image? image; // by default its null
-    // we gotta do this here cuz, as in Location.blank() url is initialized with
-    // '', hence if we try to load an image using blank url it could crash. But
-    // on this condition if we keep the image null, the widget can still render
-    // null gracefully.
-    try {
-      if (url.isNotEmpty) {
-        image = Image.network(url, fit: BoxFit.fitWidth);
-      }
-    } catch (e) {
-      print("IMAGE LOADING ERROR: could not load image $url");
-    }
-
-    return Container(
-      // Here we are using a named constructor from the Image class, just as we
-      // learnt earlier.
-      constraints: BoxConstraints.tightFor(
-        height: height,
+  Widget _renderBookButton() {
+    return TextButton(
+      onPressed: () => _handleBookPress(),
+      style: ButtonStyle(
+        minimumSize: WidgetStateProperty.all<Size>(Size.fromWidth(200.0)),
+        backgroundColor: WidgetStateProperty.all<Color>(Colors.red.shade400),
+        foregroundColor: WidgetStateProperty.all<Color>(Colors.white),
       ),
-      child: image,
+      child: Text('Book'.toUpperCase(), style: Styles.textCTAButton),
     );
   }
+
+  void _handleBookPress() async {
+    final url = Uri.parse('mailto:rxzhik@gmail.com?subject=inquiry');
+    if (await canLaunchUrl(url)) {
+      await launchUrl(url);
+    } else {
+      print('Could not launch $url');
+    }
+  }
+
+  Widget _renderBottomSpacer() {
+    return Container(
+      height: FooterHeight,
+    );
+  }
+
+  // Widget _bannerImage(String url, double height) {
+  //   Image? image; // by default its null
+  //   // we gotta do this here cuz, as in Location.blank() url is initialized with
+  //   // '', hence if we try to load an image using blank url it could crash. But
+  //   // on this condition if we keep the image null, the widget can still render
+  //   // null gracefully.
+  //   try {
+  //     if (url.isNotEmpty) {
+  //       image = Image.network(url, fit: BoxFit.fitWidth);
+  //     }
+  //   } catch (e) {
+  //     print("IMAGE LOADING ERROR: could not load image $url");
+  //   }
+
+  //   return Container(
+  //     // Here we are using a named constructor from the Image class, just as we
+  //     // learnt earlier.
+  //     constraints: BoxConstraints.tightFor(
+  //       height: height,
+  //     ),
+  //     child: image,
+  //   );
+  // }
 }

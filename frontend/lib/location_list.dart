@@ -1,9 +1,18 @@
+// All the dart libraries come first
 import "dart:async";
-
+// All the packages come next
 import "package:flutter/material.dart";
+import "package:test_drive/components/banner_image.dart";
+import "package:test_drive/components/default_app_bar.dart";
+// All the sub directories come next
+import "package:test_drive/components/location_tile.dart";
 import "package:test_drive/location_detail.dart";
 import "package:test_drive/models/location.dart";
+// Finally all the files we directly import locatlly
 import "styles.dart";
+
+// Constants for this screen
+const ListItemHeight = 245.0;
 
 // I mean have a look at gpt, its prety much same as react, but in a crude and
 // different format.
@@ -69,11 +78,7 @@ class _LocationListState extends State<LocationList> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        // To display any text in futter we use the Text widget.
-        title: Text("Locations", style: Styles.headerLarge),
-        backgroundColor: Colors.grey[600],
-      ),
+      appBar: DefaultAppBar(),
       body: RefreshIndicator(
         onRefresh: loadData,
         child: Column(
@@ -96,14 +101,17 @@ class _LocationListState extends State<LocationList> {
   Widget _listViewItemBuilder(BuildContext context, int index) {
     {
       final location = this.locations[index];
-      return ListTile(
-        contentPadding: EdgeInsets.all(10.0),
-        leading: _itemThumbnail(location),
-        title: _itemTitle(location),
-        // there should be no parameters and void return type
-        // Here technically the onTap function is a closure as we are
-        // accessing the locations variable. Have a look!
+      return GestureDetector(
         onTap: () => _navigateToLocationDetail(context, location.id),
+        child: Container(
+          height: ListItemHeight,
+          child: Stack(
+            children: [
+              BannerImage(url: location.url, height: ListItemHeight),
+              _tileFooter(location),
+            ],
+          ),
+        ),
       );
     }
   }
@@ -118,22 +126,44 @@ class _LocationListState extends State<LocationList> {
     );
   }
 
-  Widget _itemThumbnail(Location location) {
-    return Container(
-      constraints: BoxConstraints.tightFor(width: 100.0),
-      child: Image.network(location.url, fit: BoxFit.fitWidth),
+  // Widget _tileImage(String url, double width, double height) {
+  //   Image? image;
+  //   try {
+  //     image = Image.network(url, fit: BoxFit.cover);
+  //   } catch (e) {
+  //     print("Could not load image ${url}");
+  //   }
+  //   return Container(
+  //     constraints: BoxConstraints.expand(),
+  //     child: image,
+  //   );
+  // }
+
+  Widget _tileFooter(Location location) {
+    final info = LocationTile(location: location, darkTheme: true);
+    final footer = Container(
+      padding: EdgeInsets.symmetric(
+          vertical: 5.0, horizontal: Styles.horizontalPaddingDefault),
+      decoration: BoxDecoration(color: Colors.black.withOpacity(0.5)),
+      child: info,
+    );
+
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.end,
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [footer],
     );
   }
 
-  Widget _itemTitle(Location location) {
-    // Here we have usd string interpolation i.e we have put variables inside
-    // the string. If we are not using the . notation we coudld've done this
-    //  '$location' straight up.
-    return Text(
-      '${location.name}',
-      style: Styles.textDefault,
-    );
-  }
+  // Widget _itemTitle(Location location) {
+  //   // Here we have usd string interpolation i.e we have put variables inside
+  //   // the string. If we are not using the . notation we coudld've done this
+  //   //  '$location' straight up.
+  //   return Text(
+  //     '${location.name}',
+  //     style: Styles.textDefault,
+  //   );
+  // }
 
   Widget renderProgressbar(BuildContext context) {
     return (this.loading
