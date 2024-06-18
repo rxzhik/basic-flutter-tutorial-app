@@ -50,7 +50,7 @@ class _LocationListState extends State<LocationList> {
 
   // So in dart if you don't give the return type it returns dynamic.
   // To load data
-  loadData() async {
+  Future<void> loadData() async {
     // Since we need to trigger a rebuild we'll have to use the setState() method.
     if (this.mounted) {
       setState(() => this.loading = true);
@@ -74,13 +74,16 @@ class _LocationListState extends State<LocationList> {
         title: Text("Locations", style: Styles.headerLarge),
         backgroundColor: Colors.grey[600],
       ),
-      body: Column(
-        children: [
-          renderProgressbar(context),
-          Expanded(
-            child: renderListView(context),
-          ),
-        ],
+      body: RefreshIndicator(
+        onRefresh: loadData,
+        child: Column(
+          children: [
+            renderProgressbar(context),
+            Expanded(
+              child: renderListView(context),
+            ),
+          ],
+        ),
       ),
     );
   }
